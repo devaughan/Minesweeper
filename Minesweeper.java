@@ -4,16 +4,104 @@ public class Minesweeper {
 
         Scanner input = new Scanner(System.in);
         
-        Board board = new Board(10, 10, 20);
-        board.createBoard();
+        int difficulty;
 
+        System.out.println("\n\t/////////////////");
+        System.out.println("\t///Minesweeper///");
+        System.out.println("\t/////////////////\n");
         
+        System.out.println("Would you like to play on Easy(0), Medium(1), or Hard(2)?");
+        System.out.print("Input corresponding value: ");
+        difficulty = input.nextInt();
 
-        board.createMines();
-        board.printBoard();
-        System.out.println();
-        board.calcValues();
-        board.printBoard();
+        if (difficulty == 0) {
+            System.out.println("Game mode is set to easy");
+            gameStart(5, 5, 6);
+        }
+        else if (difficulty == 1) {
+            System.out.println("Game mode is set to Medium");
+            gameStart(10, 10, 20);
+        }
+        else if (difficulty == 2) {
+            System.out.println("Game mode is set to Hard");
+            gameStart(20, 20, 80);
+        }
 
+        input.close();
+
+    }
+
+    public static void gameStart(int width, int length, int numberOfMines) {
+        
+        Scanner input = new Scanner(System.in);
+        
+        Board board = new Board(width, length, numberOfMines);
+        
+        board.createBoard();
+        board.createClear();
+
+        board.printPlayerBoard();
+
+        int xValue = -1;
+        int yValue = -1;
+        boolean hasLost = false;
+
+        while (!board.hasWon() && !hasLost) {
+            
+            System.out.println("Move: " + board.getMoves());
+
+            while (!board.inBounds(xValue, yValue)) {
+                System.out.println("Input: ");
+                
+                // y and x are switched due to the arrays
+                System.out.print("\tx: ");
+                yValue = input.nextInt() - 1;
+                
+                System.out.print("\ty: ");
+                xValue = input.nextInt() - 1;
+                
+                if (!board.inBounds(xValue, yValue)) {
+                    System.out.println("Input not included in bounds");
+                }
+            }
+    
+            if (board.getMoves() != 0) {
+                board.setClear(xValue, yValue);
+                if (board.isMine(xValue, yValue)) {
+                    hasLost = true;
+                }
+            }
+            else {
+                board.setInitialClear(xValue, yValue);
+                System.out.println("successfully set inital clear");
+            
+                board.createMines();
+                System.out.println("successfully created mines");
+
+                board.calcValues();
+                System.out.println("successfully calculated mine values");
+            }
+        
+            board.checkClearValues();
+            System.out.println("successfully calculated clear values");
+                        
+            System.out.println("True Board:");
+            board.printBoard();
+            
+            System.out.println("Player Board:");
+            board.printPlayerBoard();
+
+            xValue = -1;
+            yValue = -1;
+        }
+        if (hasLost) {
+            System.out.println("Sorry you lost :(");
+        }
+        else {
+            System.out.println("Congratulations you won! :D");
+        }
+
+        input.close();
+    
     }
 }
