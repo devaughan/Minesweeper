@@ -47,21 +47,23 @@ public class Minesweeper {
         boolean hasLost = false;
 
         while (!board.hasWon() && !hasLost) {
-            
-            System.out.println("Move: " + board.getMoves());
-
             while (!board.inBounds(xValue, yValue)) {
                 System.out.println("Input: ");
                 
                 // y and x are switched due to the arrays
-                System.out.print("\tx: ");
+                System.out.print("    x: ");
                 yValue = input.nextInt() - 1;
                 
-                System.out.print("\ty: ");
+                System.out.print("    y: ");
                 xValue = input.nextInt() - 1;
                 
                 if (!board.inBounds(xValue, yValue)) {
                     System.out.println("Input not included in bounds");
+                }
+                
+                // i have no idea why this resets loop
+                if (board.isClear(xValue, yValue)) {
+                    System.out.println("Input is already clear");
                 }
             }
     
@@ -73,22 +75,24 @@ public class Minesweeper {
             }
             else {
                 board.setInitialClear(xValue, yValue);
-                System.out.println("successfully set inital clear");
+                //System.out.println("successfully set inital clear");
             
                 board.createMines();
-                System.out.println("successfully created mines");
+                //System.out.println("successfully created mines");
 
                 board.calcValues();
-                System.out.println("successfully calculated mine values");
+                //System.out.println("successfully calculated mine values");
             }
         
             board.checkClearValues();
-            System.out.println("successfully calculated clear values");
-                        
+            //System.out.println("successfully calculated clear values");
+                       
+            /*
             System.out.println("True Board:");
             board.printBoard();
-            
-            System.out.println("Player Board:");
+            */
+
+            //System.out.println("Player Board:");
             board.printPlayerBoard();
 
             xValue = -1;

@@ -251,7 +251,7 @@ public class Board
     }
 
     public void printPlayerBoard() {
-        System.out.println("Mines: " + getMines() + "\tMoves: " + getMoves());
+        System.out.println("Mines: " + getMines() + "   Moves: " + getMoves());
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < width; j++) {
                 System.out.print("[");
