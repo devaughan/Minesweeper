@@ -98,10 +98,7 @@ public class Board
         {
             int x = (int)(Math.random() * length);
             int y = (int)(Math.random() * width);
-            if (mine[x][y] == -1) {
-                i++;
-            }
-            else if (clear[x][y]) {
+            if (isMine(x, y) || clear[x][y]) {
                 i++;
             }
             else {
@@ -251,10 +248,30 @@ public class Board
     }
 
     public void printPlayerBoard() {
-        System.out.println("Mines: " + getMines() + "   Moves: " + getMoves());
+        System.out.println("\t| Mines: " + getMines() + " |     |  Moves: " + getMoves() + " |");
+        System.out.print("\t");
+        // print out x grid number
+        for (int i = 1; i <= width; i++) {
+            if ((i + 1) >= 10) {
+                System.out.print(" " + i);
+            }
+            else {
+                System.out.print(" " + i + " ");
+            }
+        }
+        System.out.println();
         for (int i = 0; i < length; i++) {
+            // print out y grid number
+            if ((i + 1) >= 10) {
+                System.out.print(" " + (i + 1) + "     ");
+            }
+            else {
+                System.out.print(" " + (i + 1) + "      ");
+            }
             for (int j = 0; j < width; j++) {
                 System.out.print("[");
+                // System.out.print("i = " + i);
+                // System.out.print("j = " + j);
                 if (!clear[i][j]) {
                     System.out.print("\\");
                 }
