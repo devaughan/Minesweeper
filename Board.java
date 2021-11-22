@@ -37,6 +37,9 @@ public class Board
     public void setClear(int x, int y) {
         moves++;
         clear[x][y] = true;
+        if (mine[x][y] == 0) {
+            seedAdjacentValues(x, y);
+        }
     }
 
     public void setInitialClear(int x, int y) {
@@ -183,70 +186,6 @@ public class Board
         }
     }
 
-    public void checkClearValues() {
-        for (int y = 0; y < length; y++) 
-        {
-            outer:
-            for (int x = 0; x < width; x++) 
-            {
-                while (mine[x][y] != 0) {
-                    if (x == (length - 1)) {
-                        break outer;
-                    }
-                    x++;
-                }
-
-                // checks upper left position
-                if (x > 0 && y > 0 && clear[x - 1][y - 1]) {
-                    clear[x][y] = true;
-                    clearAdjacentValues(x, y);
-                }
-
-                // checks upper position
-                else if (y > 0 && clear[x][y - 1]) {
-                    clear[x][y] = true;
-                    clearAdjacentValues(x, y);
-                }
-
-                // checks upper right position
-                else if (y > 0 && x < (length - 1) && clear[x + 1][y - 1] ) {
-                    clear[x][y] = true;
-                    clearAdjacentValues(x, y);
-                }
-
-                // checks left position
-                else if (x > 0 && clear[x - 1][y]) {
-                    clear[x][y] = true;
-                    clearAdjacentValues(x, y);
-                }
-
-                // checks right position
-                else if (x < (length - 1) && clear[x + 1][y]) {
-                    clear[x][y] = true;
-                    clearAdjacentValues(x, y);
-                }
-
-                // checks lower left position
-                else if (x > 0 && y < (width - 1) && clear[x - 1][y + 1]) {
-                    clear[x][y] = true;
-                    clearAdjacentValues(x, y);
-                }   
-
-                // checks lower position
-                else if (y < (width - 1) && clear[x][y + 1] ) {
-                    clear[x][y] = true;
-                    clearAdjacentValues(x, y);
-                }
-
-                // checks lower right position
-                else if (x < (length - 1) && y < (width - 1) && clear[x + 1][y + 1]) {
-                    clear[x][y] = true;
-                    clearAdjacentValues(x, y);
-                }
-            }  
-        }
-    }
-
     public void printPlayerBoard() {
         System.out.println("\t| Mines: " + getMines() + " |     |  Moves: " + getMoves() + " |");
         System.out.print("\t");
@@ -347,6 +286,120 @@ public class Board
         return false;
     }
 
+    private void seedAdjacentValues(int x, int y) {
+        if (x > 0 && y > 0) {
+            if (!clear[x - 1][y - 1]) {
+                if (checkGridPoint(x - 1, y - 1) == 0) {
+                    seedAdjacentValues(x - 1, y - 1);
+                }
+            }
+        }
+
+        // clear upper position
+        if (y > 0) {
+            if (!clear[x][y - 1]) {
+                if (checkGridPoint(x, y - 1) == 0) {
+                    seedAdjacentValues(x, y - 1);
+                }
+            }
+        }
+
+        // clear upper right position
+        if (y > 0 && x < (length - 1)) {
+            if (!clear[x + 1][y - 1]) {
+                if (checkGridPoint(x + 1, y - 1) == 0) {
+                    seedAdjacentValues(x + 1, y - 1);
+                }
+            }
+        }
+
+        // clear left position
+        if (x > 0) {
+            if (!clear[x - 1][y]) {
+                if (checkGridPoint(x - 1, y) == 0) {
+                    seedAdjacentValues(x - 1, y);
+                }
+            }
+        }
+
+        // clear right position
+        if (x < (length - 1)) {
+            if (!clear[x + 1][y]) {
+                if (checkGridPoint(x + 1, y) == 0) {
+                    seedAdjacentValues(x + 1, y);
+                }
+            }
+        }
+
+        // clear lower left position
+        if (x > 0 && y < (width - 1)) {
+            if (!clear[x - 1][y + 1]) {
+                if (checkGridPoint(x - 1, y + 1) == 0) {
+                    seedAdjacentValues(x - 1, y + 1);
+                }
+            }
+        }   
+
+        // clear lower position
+        if (y < (width - 1)) {
+            if (!clear[x][y + 1]) {
+                if (checkGridPoint(x, y + 1) == 0) {
+                    seedAdjacentValues(x, y + 1);
+                }
+            }
+        }
+
+        // clear lower right position
+        if (x < (length - 1) && y < (width - 1)) {
+            if (!clear[x + 1][y + 1]) {
+                if (checkGridPoint(x + 1, y + 1) == 0) {
+                    seedAdjacentValues(x + 1, y + 1);
+                }
+            }
+        }
+    }
+
+    public void setAdjacentValuesFalse(int x, int y) {
+        if (x > 0 && y > 0) {
+            clear[x - 1][y - 1] = false;
+        }
+
+        // clear upper position
+        if (y > 0) {
+            clear[x][y - 1] = false;
+        }
+
+        // clear upper right position
+        if (y > 0 && x < (length - 1)) {
+            clear[x + 1][y - 1] = false;
+        }
+
+        // clear left position
+        if (x > 0) {
+            clear[x - 1][y] = false;
+        }
+
+        // clear right position
+        if (x < (length - 1)) {
+            clear[x + 1][y] = false;
+        }
+
+        // clear lower left position
+        if (x > 0 && y < (width - 1)) {
+            clear[x - 1][y + 1] = false;
+        }   
+
+        // clear lower position
+        if (y < (width - 1)) {
+            clear[x][y + 1] = false;
+        }
+
+        // clear lower right position
+        if (x < (length - 1) && y < (width - 1)) {
+            clear[x + 1][y + 1] = false;
+        }
+    }
+
     private void clearAdjacentValues(int x, int y) {
         if (x > 0 && y > 0) {
             clear[x - 1][y - 1] = true;
@@ -386,6 +439,11 @@ public class Board
         if (x < (length - 1) && y < (width - 1)) {
             clear[x + 1][y + 1] = true;
         }
+    }
+
+    private int checkGridPoint(int x, int y) {
+        clear[x][y] = true;
+        return mine[x][y];
     }
 
 }

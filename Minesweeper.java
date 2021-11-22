@@ -79,20 +79,19 @@ public class Minesweeper {
 
                 board.calcValues();
                 //System.out.println("successfully calculated mine values");
+
+                board.setAdjacentValuesFalse(xValue, yValue);
+                board.setClear(xValue, yValue);
             }
 
             if (board.isMine(xValue, yValue)) {
                 hasLost = true;
                 break;
-            }
-        
-            board.checkClearValues();
-            //System.out.println("successfully calculated clear values");
-                       
-            
+            }                 
+           /* 
             System.out.println("True Board:");
             board.printBoard();
-            
+            */
 
             System.out.println("Player Board:");
             board.printPlayerBoard();
