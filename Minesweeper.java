@@ -11,7 +11,7 @@ public class Minesweeper {
         System.out.println("\t/////////////////\n");
         
         System.out.println("Would you like to play on Easy(0), Medium(1), or Hard(2)?");
-        System.out.print("Input corresponding value: ");
+        System.out.print("Input corresponding : ");
         difficulty = input.nextInt();
 
         if (difficulty == 0) {
@@ -38,57 +38,63 @@ public class Minesweeper {
         Board board = new Board(width, length, numberOfMines);
         
         board.createBoard();
-        board.createClear();
 
         board.printPlayerBoard();
 
-        int xValue = -1;
-        int yValue = -1;
+        int x = -1;
+        int y = -1;
+        String userInput = "";
         boolean hasLost = false;
 
         while (!board.hasWon() && !hasLost) {
-            while (!board.inBounds(xValue, yValue)) {
-                System.out.println("Input: ");
-                
+            while (!board.checkValidMove(x, y)) {
+                System.out.print("Input: ");
+                userInput = input.next();
+                userInput = userInput.toLowerCase();
+                y = input.nextInt() - 1;
+                x = input.nextInt() - 1;
+
+                System.out.println(userInput + "(" + x + ", " + y + ")");
+
+                /*
                 // y and x are switched due to the arrays
                 System.out.print("    x: ");
-                yValue = input.nextInt() - 1;
+                y = input.nextInt() - 1;
                 
                 System.out.print("    y: ");
-                xValue = input.nextInt() - 1;
-                
-                if (!board.inBounds(xValue, yValue)) {
+                x = input.nextInt() - 1;
+                */
+
+                if (!board.inBounds(x, y)) {
                     System.out.println("Input not included in bounds");
                 }
                 
                 // i have no idea why this resets loop
-                if (board.isClear(xValue, yValue)) {
+                /* if (board.isClear(x, y)) {
                     System.out.println("Input is already clear");
-                }
+                } */
             }
-    
-            if (board.getMoves() != 0) {
-                board.setClear(xValue, yValue);
+            if (userInput.equals("f")) {
+                board.flagMove(x, y);
+            }
+            else if (userInput.equals("r")) {
+                board.removeFlagMove(x, y);
             }
             else {
-                board.setInitialClear(xValue, yValue);
-                //System.out.println("successfully set inital clear");
-            
-                board.createMines();
-                //System.out.println("successfully created mines");
-
-                board.calcValues();
-                //System.out.println("successfully calculated mine values");
-
-                board.setAdjacentValuesFalse(xValue, yValue);
-                board.setClear(xValue, yValue);
+                if (board.getMoves() != 0) {
+                    board.playerMove(x, y);
+                }
+                else {
+                    board.firstMove(x, y);
+                }
+    
+                if (board.isMine(x, y)) {
+                    hasLost = true;
+                    break;
+                }    
             }
-
-            if (board.isMine(xValue, yValue)) {
-                hasLost = true;
-                break;
-            }                 
-           /* 
+                         
+            /* 
             System.out.println("True Board:");
             board.printBoard();
             */
@@ -96,13 +102,17 @@ public class Minesweeper {
             System.out.println("Player Board:");
             board.printPlayerBoard();
 
-            xValue = -1;
-            yValue = -1;
+            x = -1;
+            y = -1;
+
         }
+
         if (hasLost) {
+            board.printBoard();
             System.out.println("Sorry you lost :(");
         }
         else {
+            board.printBoard();
             System.out.println("Congratulations you won! :D");
         }
 
